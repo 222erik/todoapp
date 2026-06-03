@@ -5,20 +5,27 @@ import (
 	"os"
 )
 
-func SaveTodo(todo []any, filename string) {
-	json_data, err := json.Marshal(todo)
-	if err != nil {
-		panic(err)
-	}
+type Task struct {
+	TaskMessage string `json:"task"`
+	Priority    uint8  `json:"priority"`
+}
 
+// SaveTodo saves the tasks in a Json file
+func SaveTodo(todos []Task, filename string) error {
+	jsonData, err := json.Marshal(todos)
+	if err != nil {
+		return err
+	}
 	file, err := os.Create(filename)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer file.Close()
 
-	_, err = file.Write(json_data)
+	_, err = file.Write(jsonData)
 	if err != nil {
-		panic(err)
+		return err
 	}
+
+	return nil
 }
