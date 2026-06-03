@@ -16,22 +16,19 @@ func usageError() {
 }
 
 func addTask(taskMessage string, priority uint8) {
-	tasks = append(tasks, tools.Task{TaskMessage: taskMessage, Priority: priority})
-
-	var appendIndex int // Index where the task should be added in the list to make everything sorted by priority
+	var appendIndex = len(tasks)
 	for i, v := range tasks {
 		if v.Priority > priority {
 			appendIndex = i
+			break
 		}
 	}
 
-	var tmp []tools.Task = make([]tools.Task, len(tasks)+1)
-
+	var tmp []tools.Task
 	// Insert the task in the right place
 	tmp = append(tmp, tasks[:appendIndex]...)
 	tmp = append(tmp, tools.Task{TaskMessage: taskMessage, Priority: priority})
 	tmp = append(tmp, tasks[appendIndex:]...)
-
 	tasks = tmp
 }
 

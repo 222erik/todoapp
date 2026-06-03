@@ -1,6 +1,7 @@
 package tools
 
 import (
+	"bytes"
 	"encoding/json"
 	"os"
 )
@@ -16,6 +17,13 @@ func SaveTodo(todos []Task, filename string) error {
 	if err != nil {
 		return err
 	}
+
+	{
+		var jsonDataBuffer bytes.Buffer
+		json.Indent(&jsonDataBuffer, jsonData, "", "  ")
+		jsonData = jsonDataBuffer.Bytes()
+	}
+
 	file, err := os.Create(filename)
 	if err != nil {
 		return err
