@@ -34,6 +34,35 @@ func addTask(taskMessage string, priority uint8) {
 	tasks = tmp
 }
 
+func deleteTask(priority int) {
+	deleteIndex := []int{}
+	for i, v := range tasks {
+		if v.Priority == uint8(priority) {
+			deleteIndex = append(deleteIndex, i)
+		}
+	}
+	if len(deleteIndex) == 0 {
+		fmt.Println("No task found with the given priority")
+		return
+	}
+
+	if len(deleteIndex) > 1 {
+		fmt.Printf("Found %v tasks with priority %v\nChoose which one to delete:\n", len(deleteIndex), priority)
+		for i := 0; i < len(deleteIndex); i++ {
+			fmt.Printf("%v %v\n", i+1, tasks[i+deleteIndex[0]].TaskMessage)
+		}
+		fmt.Println("Your choice: ")
+		var choice int
+		fmt.Scanf("%v", &choice)
+		deleteIndex[0] += choice - 1
+	}
+
+	var tmp []tools.Task
+	tmp = append(tmp, tasks[:deleteIndex[0]]...)
+	tmp = append(tmp, tasks[deleteIndex[0]+1:]...)
+	tasks = tmp
+}
+
 func main() {
 	var message string
 	var priority int
@@ -70,7 +99,12 @@ func main() {
 			fmt.Printf("(%v) %v\n", v.Priority, v.TaskMessage)
 		}
 	case "done":
-		fmt.Println("Done command doesn't work yet")
+		deleteTask(priority)
+		err := tools.SaveTodo(tasks, todoFileName)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println("Task deleted!")
 	default:
 		usageError()
 	}
