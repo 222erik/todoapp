@@ -8,6 +8,8 @@ import (
 	"github.com/222erik/todoapp/internal/tools"
 )
 
+var todoFileName = "todo.json"
+
 var tasks = []tools.Task{}
 
 func usageError() {
@@ -43,14 +45,23 @@ func main() {
 		usageError()
 	}
 
+	var err error
+	tasks, err = tools.RestoreTodo(todoFileName)
+	if err != nil {
+		panic(err)
+	}
+
 	switch flag.Arg(0) {
 	case "add":
 		addTask(message, uint8(priority))
-		tools.SaveTodo(tasks, "todo.json")
+		err := tools.SaveTodo(tasks, todoFileName)
+		if err != nil {
+			panic(err)
+		}
 		fmt.Println("Added task!")
 	case "list":
-		for _, t := range tasks {
-			fmt.Printf("(priority %d) %s\n", t.Priority, t.TaskMessage)
+		for _, v := range tasks {
+			fmt.Printf("(priority %d) %s\n", v.Priority, v.TaskMessage)
 		}
 	case "done":
 		fmt.Println("Done command not implemented yet.")

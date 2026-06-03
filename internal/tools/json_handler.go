@@ -3,6 +3,7 @@ package tools
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"os"
 )
 
@@ -45,8 +46,7 @@ func RestoreTodo(filename string) ([]Task, error) {
 	}
 	defer file.Close()
 
-	var jsonData []byte
-	_, err = file.Read(jsonData)
+	jsonData, err := io.ReadAll(file)
 	if err != nil {
 		return nil, err
 	}
