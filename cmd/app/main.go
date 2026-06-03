@@ -13,7 +13,7 @@ var todoFileName = "todo.json"
 var tasks = []tools.Task{}
 
 func usageError() {
-	fmt.Println("usage: 'todo add <task> <priority>', 'todo list', or 'todo done <task#>'")
+	fmt.Println("usage: 'todo -m <task> -p <priority> add', 'todo list', or 'todo done <priority of task>'")
 	os.Exit(1)
 }
 
@@ -58,13 +58,19 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println("Added task!")
+		fmt.Println("Task added!")
 	case "list":
 		for _, v := range tasks {
-			fmt.Printf("(priority %d) %s\n", v.Priority, v.TaskMessage)
+			switch {
+			case v.Priority < 10:
+				fmt.Printf("  ")
+			case v.Priority < 100:
+				fmt.Printf(" ")
+			}
+			fmt.Printf("(%v) %v\n", v.Priority, v.TaskMessage)
 		}
 	case "done":
-		fmt.Println("Done command not implemented yet.")
+		fmt.Println("Done command doesn't work yet")
 	default:
 		usageError()
 	}
