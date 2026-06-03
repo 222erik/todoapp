@@ -37,3 +37,25 @@ func SaveTodo(todos []Task, filename string) error {
 
 	return nil
 }
+
+func RestoreTodo(filename string) ([]Task, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var jsonData []byte
+	_, err = file.Read(jsonData)
+	if err != nil {
+		return nil, err
+	}
+
+	var ret []Task
+	err = json.Unmarshal(jsonData, &ret)
+	if err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}
